@@ -1,0 +1,86 @@
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - '{{project-name}}/v*'
+    paths:
+      - {{project-name}}/**
+      - .github/workflows/{{project-name}}.yml
+      - .github/workflows/_*.yml
+      - .github/actions/**
+  pull_request:
+    paths:
+      - {{project-name}}/**
+      - .github/workflows/{{project-name}}.yml
+      - .github/workflows/_*.yml
+      - .github/actions/**
+
+name: Test, lint and docker ({{project-name}})
+
+defaults:
+  run:
+    working-directory: {{project-name}}
+
+jobs:
+  test:
+    name: Unit, doc and integration tests
+    runs-on: ubuntu-latest
+    {%- if database %}
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: admin
+          POSTGRES_USER: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    {%- endif %}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          working-directory: {{project-name}}
+
+      - name: Unit tests
+        run: RUST_BACKTRACE=1 RUST_LOG=info cargo test --locked --workspace --all-features --lib --bins -- --nocapture
+        if: success() || failure()
+
+      - name: Doc tests
+        run: cargo test --locked --workspace --all-features --doc
+        if: success() || failure()
+
+      - name: Integration tests
+        run: RUST_BACKTRACE=1 RUST_LOG=info cargo test --locked --workspace --test '*' -- --nocapture --include-ignored
+        if: success() || failure()
+        {%- if database %}
+        env:
+          DATABASE_URL: postgres://postgres:admin@localhost:5432/
+        {%- endif %}
+
+  lint:
+    name: Linting
+    uses: ./.github/workflows/_linting.yml
+    with:
+      working-directory: {{project-name}}
+
+  docker:
+    name: Docker build and docker push
+    needs:
+      - test
+      - lint
+    if: |
+      always() &&
+      (needs.test.result == 'success' || needs.test.result == 'cancelled') &&
+      (needs.lint.result == 'success' || needs.lint.result == 'cancelled')
+    uses: ./.github/workflows/_docker-build-push.yml
+    with:
+      service-name: {{project-name}}
