@@ -62,7 +62,7 @@ Read guide [How to add new subgraph](../subgraph-writer/README.md)
         select * from subgraphs.subgraph_error;
         
         select name, resolved_address, expiry_date 
-        from sgd1.domain 
+        from sgd4.domain 
         where label_name is not null and block_range @> 2147483647 
         order by created_at 
         limit 100;

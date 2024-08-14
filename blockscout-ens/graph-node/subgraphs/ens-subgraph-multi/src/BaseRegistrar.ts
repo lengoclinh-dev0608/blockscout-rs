@@ -6,9 +6,8 @@ import {
   checkValidLabel,
   concat,
   createEventID,
-  BASE_NODE,
   uint256ToByteArray,
-  BASE_NODE_HASH,
+  getRootNode,
 } from "./utils";
 
 // Import event types from the registry contract ABI
@@ -30,11 +29,11 @@ import {
 
 const GRACE_PERIOD_SECONDS = BigInt.fromI32(7776000); // 90 days
 
-var rootNode: ByteArray = byteArrayFromHex(BASE_NODE_HASH);
-
 export function handleNameRegistered(event: NameRegisteredEvent): void {
   let account = new Account(event.params.owner.toHex());
   account.save();
+
+  let rootNode: ByteArray = getRootNode(event.params.tld);
 
   let label = uint256ToByteArray(event.params.id);
   let registration = new Registration(label.toHex());
@@ -51,7 +50,7 @@ export function handleNameRegistered(event: NameRegisteredEvent): void {
   let labelName = ens.nameByHash(label.toHexString());
   if (labelName != null) {
     domain.labelName = labelName;
-    domain.name = labelName! + BASE_NODE;
+    domain.name = labelName! + `.${event.params.tld}`;
     registration.labelName = labelName;
   }
   domain.save();
@@ -68,6 +67,8 @@ export function handleNameRegistered(event: NameRegisteredEvent): void {
 
 
 export function handleNameRenewed(event: NameRenewedEvent): void {
+
+  let rootNode: ByteArray = getRootNode(event.params.tld);
   let label = uint256ToByteArray(event.params.id);
   let registration = Registration.load(label.toHex())!;
   let domain = Domain.load(crypto.keccak256(concat(rootNode, label)).toHex())!;
@@ -87,6 +88,8 @@ export function handleNameRenewed(event: NameRenewedEvent): void {
 }
 
 export function handleNameTransferred(event: TransferEvent): void {
+  let rootNode: ByteArray = getRootNode(event.params.tld);
+
   let account = new Account(event.params.to.toHex());
   account.save();
 

@@ -110,21 +110,21 @@ mod tests {
     #[sqlx::test(migrations = false)]
     async fn cache_view_works(pool: PgPool) -> anyhow::Result<()> {
         let mut conn = pool.acquire().await?;
-        conn.execute("CREATE SCHEMA sgd1;").await?;
-        conn.execute("CREATE TABLE sgd1.foo(bar integer)").await?;
-        conn.execute("INSERT INTO sgd1.foo VALUES (1)").await?;
+        conn.execute("CREATE SCHEMA sgd4;").await?;
+        conn.execute("CREATE TABLE sgd4.foo(bar integer)").await?;
+        conn.execute("INSERT INTO sgd4.foo VALUES (1)").await?;
 
-        TestView::create_view(&pool, "sgd1").await?;
+        TestView::create_view(&pool, "sgd4").await?;
         assert_current_max_is(&pool, 1).await;
-        conn.execute("INSERT INTO sgd1.foo VALUES (100)").await?;
+        conn.execute("INSERT INTO sgd4.foo VALUES (100)").await?;
         assert_current_max_is(&pool, 1).await;
-        TestView::refresh_view(&pool, "sgd1").await?;
+        TestView::refresh_view(&pool, "sgd4").await?;
         assert_current_max_is(&pool, 100).await;
         Ok(())
     }
 
     async fn assert_current_max_is(pool: &PgPool, max_int: i32) {
-        let row = sqlx::query("SELECT * FROM sgd1.test_view")
+        let row = sqlx::query("SELECT * FROM sgd4.test_view")
             .fetch_one(pool)
             .await
             .expect("fetching test view");

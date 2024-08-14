@@ -614,6 +614,11 @@
         "indexed": false,
         "name": "expires",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "tld",
+        "type": "string"
       }
     ],
     "name": "NameRegistered",
@@ -631,6 +636,11 @@
         "indexed": false,
         "name": "expires",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "tld",
+        "type": "string"
       }
     ],
     "name": "NameRenewed",
@@ -670,6 +680,11 @@
         "indexed": true,
         "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "tld",
+        "type": "string"
       }
     ],
     "name": "Transfer",

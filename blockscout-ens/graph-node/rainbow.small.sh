@@ -1,5 +1,5 @@
 #!/bin/bash
-cat <<EOF | docker exec -i gn-postgres-dev psql -U graph-node -d graph-node
+cat <<EOF | docker exec -i graph-node-postgres-1 psql -U graph-node -d graph-node
 
 -- SQL script to recreate the ens_names table from a list of names
 
@@ -29,6 +29,8 @@ CREATE TABLE public.ens_names (
 --
 
 COPY public.ens_names (hash, name) FROM stdin;
+0x2b0b13bb0a6a3161a7cc15d4211100a83e1df85d5a2d21c750dc2413dc30eccc	evmtn
+0xf0b279ce3e01bdf0292ac069254d59eda5b00d6fee3b0b53b915ef012c14d8bb	lnl
 0x93ad29622c7a43be4ba50a1e97ec04a11d86740d6e621d111f2e1b8ce170acae	mode
 0x6817c00f03de8b5bd58d2016b59d251c13056b989171c5852949903bc043bc27	get
 0x7a9332fa0d910db7dd4d354d0e6667ab1ebcb9fdcc6a0025433332ec7fa15e2e	blogger
@@ -234,7 +236,6 @@ COPY public.ens_names (hash, name) FROM stdin;
 0x2016bf7fcd94cb2a21927d55b71eb926466f2af12767bd8569953cb2f4700ed4	venturebeat
 0x0e9d5423d09fdc751d91839f5ab11eef8417f24981bbdc47dc78388dda1bb3a7	cbc
 0x4f5b812789fc606be1b3b16908db13fc7a9adf7ca72641f84d75b47069d3d7f0	eth
-0x2b0b13bb0a6a3161a7cc15d4211100a83e1df85d5a2d21c750dc2413dc30eccc  evmtn
 0xf66c429b6e867191e5ec28048549aff2c0633aa75f68017b5bbbf0016ea2157a	draft
 0xb25165d8d83d96960019512ded4c12a03b27696c5c911eb9ae92049d1c2bc5b8	telegram
 0x032438243ff723ad12dab87871b151e46135a85bad88612f48c7819a31b43042	plesk

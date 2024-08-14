@@ -2,7 +2,7 @@ import {
   describe,
   assert,
   test,
-} from "matchstick-as/assembly/index"
+} from "matchstick-as"
 import { hashByName } from "../src/utils"
 import { Bytes } from "@graphprotocol/graph-ts"
 

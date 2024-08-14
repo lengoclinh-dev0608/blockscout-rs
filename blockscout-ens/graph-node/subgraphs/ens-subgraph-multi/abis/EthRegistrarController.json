@@ -148,6 +148,11 @@
         "internalType": "uint256",
         "name": "expires",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "tld",
+        "type": "string"
       }
     ],
     "name": "NameRegistered",
@@ -179,6 +184,11 @@
         "internalType": "uint256",
         "name": "expires",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "tld",
+        "type": "string"
       }
     ],
     "name": "NameRenewed",

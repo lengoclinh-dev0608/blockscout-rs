@@ -9,8 +9,8 @@ dataSources:
     network: mainnet
     source:
       abi: EnsRegistry
-      address: "0xB78a6C63811cC5943abbF90FD53372c1D8329321"
-      startBlock: 35618
+      address: "0xF7A1EBF23de5CB6CbcebC5AFF05C857837b94d13"
+      startBlock: 86719
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -37,7 +37,7 @@ dataSources:
     network: mainnet
     source:
       abi: Resolver
-      startBlock: 35691
+      startBlock: 86719
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -85,8 +85,8 @@ dataSources:
     network: mainnet
     source:
       abi: BaseRegistrar
-      address: "0x28173A2872769A2572C9E81ADEB2030b0bC77B36"
-      startBlock: 35620
+      address: "0xd040b19764c71E7F39c6f30e399466009860Ff08"
+      startBlock: 86719
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -101,19 +101,46 @@ dataSources:
         - name: BaseRegistrar
           file: ./abis/BaseRegistrar.json
       eventHandlers:
-        - event: NameRegistered(indexed uint256,indexed address,uint256,string)
+        - event: NameRegistered(indexed uint256,indexed address,uint256)
           handler: handleNameRegistered
-        - event: NameRenewed(indexed uint256,uint256,string)
+        - event: NameRenewed(indexed uint256,uint256)
           handler: handleNameRenewed
-        - event: Transfer(indexed address,indexed address,indexed uint256,string)
+        - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleNameTransferred
+  - kind: ethereum/contract
+    name: BaseRegistrarEVMTN
+    network: mainnet
+    source:
+      abi: BaseRegistrar
+      address: "0x7D3873122C34A769E01c0e6304332Ad17069cd05"
+      startBlock: 86719
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/BaseRegistrar.ts
+      entities:
+        - Registration
+        - NameRegistered
+        - NameRenewed
+        - NameTransferred
+      abis:
+        - name: BaseRegistrar
+          file: ./abis/BaseRegistrar.json
+      eventHandlers:
+        - event: NameRegistered(indexed uint256,indexed address,uint256)
+          handler: handleNameRegisteredEVMTN
+        - event: NameRenewed(indexed uint256,uint256)
+          handler: handleNameRenewedEVMTN
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleNameTransferredEVMTN
   - kind: ethereum/contract
     name: EthRegistrarController
     network: mainnet
     source:
       abi: EthRegistrarController
-      address: "0xe844853E51B1c8978Ca27D3AD629b1c7aAdc78f7"
-      startBlock: 35684
+      address: "0x56E710c04a3BDc68676D3157AB5BFCEc78a7597a"
+      startBlock: 86719
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -126,7 +153,30 @@ dataSources:
           file: ./abis/EthRegistrarController.json
       eventHandlers:
         - event: NameRegistered(string,indexed bytes32,indexed
-            address,uint256,uint256,uint256,string)
+            address,uint256,uint256,uint256)
           handler: handleNameRegisteredByController
-        - event: NameRenewed(string,indexed bytes32,uint256,uint256,string)
+        - event: NameRenewed(string,indexed bytes32,uint256,uint256)
           handler: handleNameRenewedByController
+  - kind: ethereum/contract
+    name: EthRegistrarControllerEVMTN
+    network: mainnet
+    source:
+      abi: EthRegistrarController
+      address: "0x3FF798388ee1042Bbd90e3E029E57E8118a9A083"
+      startBlock: 86719
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/EthRegistrarController.ts
+      entities:
+        - Registration
+      abis:
+        - name: EthRegistrarController
+          file: ./abis/EthRegistrarController.json
+      eventHandlers:
+        - event: NameRegistered(string,indexed bytes32,indexed
+            address,uint256,uint256,uint256)
+          handler: handleNameRegisteredByControllerEVMTN
+        - event: NameRenewed(string,indexed bytes32,uint256,uint256)
+          handler: handleNameRenewedByControllerEVMTN

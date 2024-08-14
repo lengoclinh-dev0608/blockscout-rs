@@ -5,10 +5,10 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ ens-subgraph",
-    "create-local": "graph create graphprotocol/ens --node http://103.69.98.52:8020",
-    "remove-local": "graph remove graphprotocol/ens --node http://103.69.98.52:8020",
-    "deploy-local": "graph deploy graphprotocol/ens --ipfs http://103.69.98.53:5001 --node  http://103.69.98.52:8020/ --version-label 0.0.5 --network mainnet",
-    "log": "graph logs --node http://103.69.98.52:8020/ --subgraph-name graphprotocol/ens",
+    "create-local": "graph create graphprotocol/ens --node http://localhost:8020",
+    "remove-local": "graph remove graphprotocol/ens --node http://localhost:8020",
+    "deploy-local": "graph deploy graphprotocol/ens --ipfs http://103.69.98.53:5001 --node  http://localhost:8020/ --version-label 0.0.5 --network mainnet",
+    "log": "graph logs --node http://localhost:8020/ --subgraph-name graphprotocol/ens",
 
     "test": "graph test"
   },

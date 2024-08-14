@@ -1,4 +1,4 @@
-graph_node_url := "http://103.69.98.52:8020"
+graph_node_url := "http://localhost:8020"
 ipfs_url := "http://103.69.98.53:5001"
 network := "mainnet"
 name := "ens-subgraph"

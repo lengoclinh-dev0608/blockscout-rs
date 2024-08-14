@@ -8,9 +8,7 @@ import {
   import {
     checkValidLabel,
     concat,
-    byteArrayFromHex,
-    BASE_NODE_HASH,
-    BASE_NODE,
+    getRootNode,
   } from "./utils";
 
 
@@ -24,34 +22,34 @@ import {
     Registration,
   } from "../generated/schema";
 
-
-var rootNode: ByteArray = byteArrayFromHex(BASE_NODE_HASH);
-
 export function handleNameRegisteredByController(
     event: ControllerNameRegisteredEvent
   ): void {
     setNamePreimage(
       event.params.name,
       event.params.label,
-      event.params.baseCost.plus(event.params.premium)
+      event.params.baseCost.plus(event.params.premium),
+      event.params.tld,
     );
   }
   
 export function handleNameRenewedByController(
   event: ControllerNameRenewedEvent
 ): void {
-  setNamePreimage(event.params.name, event.params.label, event.params.cost);
+  setNamePreimage(event.params.name, event.params.label, event.params.cost, event.params.tld);
 }
 
-function setNamePreimage(name: string, label: Bytes, cost: BigInt): void {
+function setNamePreimage(name: string, label: Bytes, cost: BigInt, tld: string): void {
   if (!checkValidLabel(name)) {
     return;
   }
 
+  let rootNode: ByteArray = getRootNode(tld);
+
   let domain = Domain.load(crypto.keccak256(concat(rootNode, label)).toHex())!;
   if (domain.labelName !== name) {
     domain.labelName = name;
-    domain.name = name + BASE_NODE;
+    domain.name = name + `.${tld}`;
     domain.save();
   }
 
